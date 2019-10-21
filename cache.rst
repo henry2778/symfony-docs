@@ -317,6 +317,44 @@ For advanced configurations it could sometimes be useful to use a pool as an ada
             ],
         ]);
 
+If you, for some reason, want to take control over pool namespace generation,
+you can achieve it by setting the `namespace` attribute of the `cache.pool` service tag.
+For example, you can override the service definition of the adapter:
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        # app/config/services.yml
+        services:
+            app.cache.adapter.redis:
+                parent: 'cache.adapter.redis'
+                tags:
+                    - { name: cache.pool, namespace: 'my_custom_namespace' }
+
+    .. code-block:: xml
+
+        <!-- app/config/services.xml -->
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+            <services>
+                <service id="app.cache.adapter.redis" parent="cache.adapter.redis">
+                    <tag name="cache.pool" namespace="my_custom_namespace"/>
+                </service>
+            </services>
+        </container>
+
+    .. code-block:: php
+
+        // app/config/config.php
+        $definition = new ChildDefinition('cache.adapter.redis');
+        $definition->addTag('cache.pool', ['namespace' => 'my_custom_namespace']);
+        $container->setDefinition('app.cache.adapter.redis', $definition);
+
 Custom Provider Options
 -----------------------
 
